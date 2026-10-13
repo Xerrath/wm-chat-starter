@@ -73,7 +73,8 @@ app.post("/api/chats/:id/messages", async (req, res) => {
 });
 
 // ---------- Day 5: GROUPS ----------
-// Saves a gray "system" line in the chat (like "alan added maria") and makes it the lastMessage.
+// ALREADY DONE (you use it today): saves a gray "system" line in the chat, like "alan added maria",
+// and makes it the chat's lastMessage.
 async function systemMessage(chatId, text) {
   const message = { chatId: chatId, from: "system", text: text, sentAt: new Date() };
   await db.collection("messages").insertOne(message);
@@ -102,6 +103,8 @@ app.patch("/api/chats/:id", async (req, res) => {
   res.status(501).json({ error: "PATCH /api/chats/:id is not built yet (Day 5)" });
 });
 
-app.listen(PORT, () => {
+// Starts the server. Already running in another terminal? You get EADDRINUSE: Ctrl+C there first.
+app.listen(PORT, (error) => {
+  if (error) throw error;
   console.log(`WM Chat running at http://localhost:${PORT}`);
 });

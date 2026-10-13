@@ -16,5 +16,11 @@ export async function connectDB() {
 // Runs every time the server starts, but only fills chatDB when it's empty.
 // Puts in the first user (WM Bot), the first chat (West-MEC Lounge), and the first message.
 export async function seedDatabase(db) {
+  const users = db.collection("users");
+  const chats = db.collection("chats");
+  const messages = db.collection("messages");
+  const now = new Date();
+  const welcome = "Welcome to WM Chat! Everyone who signs up joins the Lounge. Say hi!";
+
   throw new Error("seedDatabase() is not built yet (Day 1)");
 }

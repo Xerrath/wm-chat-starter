@@ -36,18 +36,22 @@ export async function setUpChat(app, connectDB, seedDatabase) {
     if (!db) {
       return res.status(500).json({ error: problem.message });
     }
-    const collections = await db.listCollections().toArray();
-    const counts = {};
-    for (const name of COLLECTIONS) {
-      counts[name] = await db.collection(name).countDocuments();
+    try {
+      const collections = await db.listCollections().toArray();
+      const counts = {};
+      for (const name of COLLECTIONS) {
+        counts[name] = await db.collection(name).countDocuments();
+      }
+      res.json({
+        database: db.databaseName,
+        where: where(),
+        collections: collections.map((c) => c.name).sort(),
+        counts: counts,
+        seed: seedProblem ? seedProblem.message : "done",
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
-    res.json({
-      database: db.databaseName,
-      where: where(),
-      collections: collections.map((c) => c.name).sort(),
-      counts: counts,
-      seed: seedProblem ? seedProblem.message : "done",
-    });
   });
 
   app.post("/api/reset", async (req, res) => {
