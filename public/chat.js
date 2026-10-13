@@ -1,6 +1,6 @@
 // chat.js: draws the chat page and decides WHEN to talk to the server.
 // You do NOT need to change this file. Read it to see WHEN each api.js function runs.
-// Every function it calls from api.js has a comment like: // api.js (Day 3)
+// Every api.js call has a comment saying which station or day builds its route: // api.js (Day 3)
 
 const POLL_EVERY = 2000; // ask the server for new messages every 2 seconds
 
@@ -140,7 +140,7 @@ $("signin-form").addEventListener("submit", async (event) => {
       $("signin-note").textContent = "Type your username first. New here? Use Sign up.";
       return;
     }
-    const user = await signIn(username); // api.js (Day 2)
+    const user = await signIn(username); // api.js (Station U)
     showSignedIn(user);
   } catch (error) {
     if (error.notBuilt) $("signin-note").textContent = error.message;
@@ -155,7 +155,7 @@ $("signup-form").addEventListener("submit", async (event) => {
   try {
     const username = $("signup-username").value.trim().toLowerCase();
     const display = $("signup-display").value.trim();
-    const user = await signUp(username, display); // api.js (Day 2)
+    const user = await signUp(username, display); // api.js (Station U)
     showSignedIn(user);
     renderStatus();
   } catch (error) {
@@ -169,7 +169,7 @@ $("sign-out").addEventListener("click", signOut);
 // ---------- The People list (everyone who has signed up) ----------
 async function loadUsers() {
   try {
-    const users = await getUsers(); // api.js (Day 2)
+    const users = await getUsers(); // api.js (Station U)
     state.users = {};
     for (const user of users) state.users[user._id] = user;
     return true;
@@ -485,7 +485,7 @@ $("add-member").addEventListener("click", async () => {
     list.append(
       personButton(user, async (person, button) => {
         try {
-          state.openChat = await addMember(state.openChat._id, state.me._id, person._id); // api.js (Day 5)
+          state.openChat = await addMember(state.openChat._id, state.me._id, person._id); // api.js (Day 3)
           button.disabled = true;
           button.classList.add("opacity-40");
           drawChatHeader();
@@ -511,7 +511,7 @@ $("rename-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   $("rename-dialog").close();
   try {
-    state.openChat = await renameChat(state.openChat._id, state.me._id, $("rename-name").value); // api.js (Day 5)
+    state.openChat = await renameChat(state.openChat._id, state.me._id, $("rename-name").value); // api.js (Extension)
     drawChatHeader();
     await loadMessages();
     await loadChats();
@@ -530,7 +530,7 @@ $("leave-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   $("leave-dialog").close();
   try {
-    await leaveChat(state.openChat._id, state.me._id); // api.js (Day 5)
+    await leaveChat(state.openChat._id, state.me._id); // api.js (Extension)
     closeChat();
     await loadChats();
   } catch (error) {
@@ -563,7 +563,7 @@ async function start() {
     return;
   }
   try {
-    showSignedIn(await signIn(saved)); // api.js (Day 2)
+    showSignedIn(await signIn(saved)); // api.js (Station U)
   } catch {
     sessionStorage.removeItem("wm-chat-user");
   }

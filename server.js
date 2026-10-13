@@ -12,32 +12,32 @@ const app = express();
 // Sends the chat page (everything in the public folder) to the browser.
 app.use(express.static("public"));
 
-// ---------- Day 2: read JSON bodies ----------
+// ---------- Station U: read JSON bodies ----------
 
 
 // ALREADY DONE: connects with your connectDB(), seeds with your seedDatabase(),
 // adds GET /api/status and POST /api/reset.
 const db = await setUpChat(app, connectDB, seedDatabase);
 
-// ---------- Day 2: USERS ----------
+// ---------- Station U: Accounts ----------
 // POST /api/users   body: { "username": "alan", "displayName": "Alan M." }
 // Signs up a new user. 400 if the username breaks the rules, 409 if it's taken.
 // Everyone who signs up joins the West-MEC Lounge.
 app.post("/api/users", async (req, res) => {
-  res.status(501).json({ error: "POST /api/users is not built yet (Day 2)" });
+  res.status(501).json({ error: "POST /api/users is not built yet (Station U)" });
 });
 
 // GET /api/users/:username: signs in. Sends back ONE user, or 404 if there's no one with that username.
 app.get("/api/users/:username", async (req, res) => {
-  res.status(501).json({ error: "GET /api/users/:username is not built yet (Day 2)" });
+  res.status(501).json({ error: "GET /api/users/:username is not built yet (Station U)" });
 });
 
 // GET /api/users: sends back an array of every user, A to Z (the People list).
 app.get("/api/users", async (req, res) => {
-  res.status(501).json({ error: "GET /api/users is not built yet (Day 2)" });
+  res.status(501).json({ error: "GET /api/users is not built yet (Station U)" });
 });
 
-// ---------- Day 3: CHATS ----------
+// ---------- Day 3: Conversations ----------
 // GET /api/chats?user=alan: sends back every chat that user is a member of, newest first.
 app.get("/api/chats", async (req, res) => {
   res.status(501).json({ error: "GET /api/chats is not built yet (Day 3)" });
@@ -57,7 +57,7 @@ app.post("/api/chats/group", async (req, res) => {
   res.status(501).json({ error: "POST /api/chats/group is not built yet (Day 3)" });
 });
 
-// ---------- Day 4: MESSAGES ----------
+// ---------- Day 4: Messages ----------
 // GET /api/chats/:id/messages?user=alan&after=2026-10-12T18:00:00.000Z
 // Sends back the chat's messages, oldest first. With after: only the ones sent after that time.
 // 400 bad id, 404 no chat, 403 if user isn't a member.
@@ -72,8 +72,8 @@ app.post("/api/chats/:id/messages", async (req, res) => {
   res.status(501).json({ error: "POST /api/chats/:id/messages is not built yet (Day 4)" });
 });
 
-// ---------- Day 5: GROUPS ----------
-// ALREADY DONE (you use it today): saves a gray "system" line in the chat, like "alan added maria",
+// ---------- Day 3: Conversations (adding people) ----------
+// ALREADY DONE (you use it in add people): saves a gray "system" line in the chat, like "alan added maria",
 // and makes it the chat's lastMessage.
 async function systemMessage(chatId, text) {
   const message = { chatId: chatId, from: "system", text: text, sentAt: new Date() };
@@ -88,19 +88,20 @@ async function systemMessage(chatId, text) {
 // Adds someone to a group. 400 bad id or a direct message, 404 no chat or no user,
 // 403 if by isn't a member, 409 if they're already in it.
 app.patch("/api/chats/:id/members", async (req, res) => {
-  res.status(501).json({ error: "PATCH /api/chats/:id/members is not built yet (Day 5)" });
+  res.status(501).json({ error: "PATCH /api/chats/:id/members is not built yet (Day 3)" });
 });
 
+// ---------- Extension (done early): Leave and Rename ----------
 // DELETE /api/chats/:id/members/:username: leaves a group.
 // The last one out deletes the chat AND its messages. 400 bad id or a direct message, 404 no chat or not a member.
 app.delete("/api/chats/:id/members/:username", async (req, res) => {
-  res.status(501).json({ error: "DELETE /api/chats/:id/members/:username is not built yet (Day 5)" });
+  res.status(501).json({ error: "DELETE /api/chats/:id/members/:username is not built yet (Extension)" });
 });
 
 // PATCH /api/chats/:id   body: { "by": "alan", "name": "Study Squad" }
 // Renames a group. 400 bad id, no name, or a direct message, 404 no chat, 403 if by isn't a member.
 app.patch("/api/chats/:id", async (req, res) => {
-  res.status(501).json({ error: "PATCH /api/chats/:id is not built yet (Day 5)" });
+  res.status(501).json({ error: "PATCH /api/chats/:id is not built yet (Extension)" });
 });
 
 // Starts the server. Already running in another terminal? You get EADDRINUSE: Ctrl+C there first.

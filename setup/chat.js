@@ -1,8 +1,9 @@
 // setup/chat.js: ALREADY DONE. You don't need to change this file.
 // Connects with YOUR connectDB(), fills chatDB with YOUR seedDatabase(), and adds two routes:
+// (connectDB not built yet? You get the practice chatDB on this computer until Station A.)
 //   GET /api/status   the green line on the page
 //   POST /api/reset   the Reset chat button: empties all three collections, then seeds them again
-import { where } from "./practice-server.js";
+import { where, practiceDB } from "./practice-server.js";
 
 const COLLECTIONS = ["users", "chats", "messages"];
 
@@ -10,14 +11,22 @@ export async function setUpChat(app, connectDB, seedDatabase) {
   let db = null;
   let problem = null;
   let seedProblem = null;
+  let place = where();
 
   try {
     db = await connectDB();
-    console.log(`Connected to ${db.databaseName} on ${where()}`);
+    console.log(`Connected to ${db.databaseName} on ${place}`);
   } catch (error) {
-    problem = error;
-    db = null;
-    console.log(`Database not connected: ${error.message}`);
+    if (error.message.includes("not built yet")) {
+      // You haven't done Station A yet: use the practice chatDB on this computer for now.
+      db = await practiceDB();
+      place = "the practice server (until you build connectDB in Station A)";
+      console.log(`connectDB() is not built yet (Station A). Using the practice chatDB on this computer.`);
+    } else {
+      problem = error;
+      db = null;
+      console.log(`Database not connected: ${error.message}`);
+    }
   }
 
   async function seed() {
@@ -44,7 +53,7 @@ export async function setUpChat(app, connectDB, seedDatabase) {
       }
       res.json({
         database: db.databaseName,
-        where: where(),
+        where: place,
         collections: collections.map((c) => c.name).sort(),
         counts: counts,
         seed: seedProblem ? seedProblem.message : "done",
@@ -62,7 +71,7 @@ export async function setUpChat(app, connectDB, seedDatabase) {
       await db.collection(name).deleteMany({});
     }
     await seed();
-    if (seedProblem) {
+    if (seedProblem && !seedProblem.message.includes("not built yet")) {
       return res.status(500).json({ error: seedProblem.message });
     }
     res.json({ reset: true });
