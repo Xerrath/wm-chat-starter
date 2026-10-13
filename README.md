@@ -36,7 +36,9 @@ Everything lives in one database, `chatDB`, with three collections: `users`, `ch
    npm install
    ```
 
-5. Make your `.env` file: copy `.env.example` and name the copy `.env`. Paste your **Atlas connection string** after `MONGODB_URI=` (no spaces, no quotes, your real password in place of `<db_password>`).
+5. Make your `.env` file: copy `.env.example` and name the copy `.env`. Paste your **Atlas connection string** after `MONGODB_URI=` (no spaces, no quotes, your database user's password in place of `<db_password>`). Get the string in Atlas: your cluster > **Connect** > **Drivers and Client Libraries** > Node.js.
+
+   Your string goes in **`.env` only**. `.env.example` is pushed to GitHub, so leave it as `MONGODB_URI=` with nothing after it.
 6. Start the chat:
 
    ```
@@ -79,8 +81,12 @@ You are the only one on your database, so **you play every person**. Each browse
 
 - **EADDRINUSE**: the chat is already running in another terminal. Ctrl+C there.
 - **I changed server.js but nothing changed**: stop the server (Ctrl+C) and `npm start` again.
-- **`querySrv` / timeout errors**: the network may block Atlas, or your IP isn't on the Atlas IP Access List. Tell your teacher.
-- **`bad auth`**: the password in your string is wrong. It's the **database user** password, not your Atlas login.
+- **`bad auth : authentication failed`**: the password in your string is wrong, or `<db_password>` is still in it. It's the **database user** password, not your Atlas login. Reset it in Atlas: Security > Database Access > Edit > Edit Password.
+- **`Invalid scheme`**: quotes or spaces around the string in `.env`. It must start right after `MONGODB_URI=`.
+- **`querySrv ECONNREFUSED`**: this network can't look up a `mongodb+srv://` address. Use the long `mongodb://...shard-00-00...` version of your string instead, and tell your teacher.
+- **`Server selection timed out`**: your IP isn't on the Atlas list. Security > Network Access > Add Current IP Address, wait a minute, restart.
+- **It says "the practice server"**: your `.env` isn't being read. Check it's named exactly `.env` (not `.env.txt`) and the string is in `.env`, not `.env.example`.
+- **Reset chat** deletes every account. Only press it when you mean to.
 - **No Atlas today?** Leave `MONGODB_URI=` empty to use a practice MongoDB on this computer (`npm run check-mongodb`, and only if it says NO, `npm run get-mongodb`). Ask your teacher first: it's a big download.
 
 Needs Node.js 20.19 or newer (`node -v` to check).
