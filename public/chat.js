@@ -104,6 +104,10 @@ async function renderStatus() {
 
 // ---------- Signing in and out ----------
 function showSignedIn(user) {
+  // Only a real user (with a username in _id) can sign in.
+  if (!user || typeof user._id !== "string") {
+    throw new Error("The server didn't send back a user. Check that your sign-in route sends ONE user");
+  }
   state.me = user;
   sessionStorage.setItem("wm-chat-user", user._id); // this TAB remembers who you are
   $("signin-view").classList.add("hidden");
@@ -132,6 +136,10 @@ $("signin-form").addEventListener("submit", async (event) => {
   $("signin-note").textContent = "";
   try {
     const username = $("signin-username").value.trim().toLowerCase();
+    if (!username) {
+      $("signin-note").textContent = "Type your username first. New here? Use Sign up.";
+      return;
+    }
     const user = await signIn(username); // api.js (Day 2)
     showSignedIn(user);
   } catch (error) {
@@ -550,7 +558,10 @@ async function start() {
 
   // Signed in on this tab before you refreshed? Sign back in.
   const saved = sessionStorage.getItem("wm-chat-user");
-  if (!saved) return;
+  if (!saved || saved === "undefined") {
+    sessionStorage.removeItem("wm-chat-user");
+    return;
+  }
   try {
     showSignedIn(await signIn(saved)); // api.js (Day 2)
   } catch {
